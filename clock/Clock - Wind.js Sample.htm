@@ -100,26 +100,33 @@
         }));
 
         //用异步来"并行"执行，则只需要 Max(T(a()),T(b())) = 3s
+        var Task = Wind.Async.Task;
         var fn2 = eval(Wind.compile("async", function() {
             var bengin = new Date();
 
-            var t = a();
-            t.start();
-            var t2 = b();
-            t2.start();
-            var t3 = c();
-            t3.start();
-            var t4 = d();
-            t4.start();
-            var t5 = e();
-            t5.start();
+            //使用单个逐渐异步开始执行没，并在最后等所有执行完毕后结束大方法
+            // var t = a();
+            // t.start();
+            // var t2 = b();
+            // t2.start();
+            // var t3 = c();
+            // t3.start();
+            // var t4 = d();
+            // t4.start();
+            // var t5 = e();
+            // t5.start();
 
-            var br =  $await(b());
-            var ar = $await(t);
-            var ar = $await(t2);
-            var ar = $await(t3);
+            // var br =  $await(b());
+            // var ar = $await(t);
+            // var ar = $await(t2);
+            // var ar = $await(t3);
             //var ar = $await(t4);
-            var ar = $await(t5);
+            // var ar = $await(t5);
+
+            //使用windjs 自带辅助方法 Task.whenAll 来简化
+            var results = $await(Task.whenAll(
+                a(),b(),c(),d(),e()
+            ));
             alert(new Date() - bengin);
         }));
 

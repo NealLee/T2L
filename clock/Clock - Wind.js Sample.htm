@@ -1,6 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <!-- saved from url=(0065)file:///C:/Users/NealLee/Desktop/Clock%20-%20Wind.js%20Sample.htm -->
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Clock - Wind.js Sample</title>
     <meta http-equiv="X-UA-Compatible" content="IE=9">    
     
@@ -74,8 +74,25 @@
             
              return "b";
         }));
+        var c = eval(Wind.compile("async", function() {
+            $await(Wind.Async.sleep(5000));
+            
+             return "b";
+        }));
+        
+        var d = eval(Wind.compile("async", function() {
+            $await(Wind.Async.sleep(1000));
+            
+             return "b";
+        }));
+
+        var e = eval(Wind.compile("async", function() {
+            $await(Wind.Async.sleep(3000));
+            
+             return "b";
+        }));
         //传统执行需要 T(a()) + T(b()) = 5s [T(f(n))代表函数f(n)的执行时间]
-        var c1 = eval(Wind.compile("async", function() {
+        var fn1 = eval(Wind.compile("async", function() {
             var bengin = new Date();
             var br =  $await(a());
             var ar = $await(b());
@@ -83,20 +100,32 @@
         }));
 
         //用异步来"并行"执行，则只需要 Max(T(a()),T(b())) = 3s
-        var c = eval(Wind.compile("async", function() {
+        var fn2 = eval(Wind.compile("async", function() {
             var bengin = new Date();
 
             var t = a();
             t.start();
+            var t2 = b();
+            t2.start();
+            var t3 = c();
+            t3.start();
+            var t4 = d();
+            t4.start();
+            var t5 = e();
+            t5.start();
 
             var br =  $await(b());
             var ar = $await(t);
+            var ar = $await(t2);
+            var ar = $await(t3);
+            //var ar = $await(t4);
+            var ar = $await(t5);
             alert(new Date() - bengin);
         }));
 
         /******************end 这段代码用来测试wind.js 异步的 “并行” 这是伪并行****************************/
 
-        var d = eval(Wind.compile("async", function() {
+        var fn3 = eval(Wind.compile("async", function() {
             var bengin = new Date();
             var a = 0, current = 1;
             while (new Date()-bengin < 5000) {
@@ -106,7 +135,7 @@
             }
         }));
         
-        //d().start();
+        
         
     </script>
 </head>
@@ -118,7 +147,7 @@
         var canvas = document.getElementById("clockCanvas");
         var ctx = canvas.getContext ? canvas.getContext("2d") : null;
         drawClockAsync(1000).start();
-        c().start();
+        fn2().start();
     </script>
 
 
